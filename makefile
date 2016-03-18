@@ -1,8 +1,11 @@
 CC=g++
-CFLAGS=`pkg-config opencv --cflags`
-LDFLAGS=`pkg-config opencv --libs`
+CFLAGS=`pkg-config opencv visionworks --cflags`
+LDFLAGS=`pkg-config opencv visionworks --libs`
 
-all: cpu_bm gpu_bm gpu_dbf gpu_asw cpu_asw cv_sgbm
+all: cpu_bm gpu_bm gpu_dbf gpu_asw cpu_asw cv_sgbm vx_sgbm
+
+vx_sgbm:vx_sgbm.cpp
+	g++ $(CFLAGS) -o $@ $< $(LDFLAGS)
 
 cv_sgbm:cv_sgbm.cpp
 	g++ $(CFLAGS) -o $@ $< $(LDFLAGS)

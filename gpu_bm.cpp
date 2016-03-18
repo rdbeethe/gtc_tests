@@ -10,11 +10,6 @@
 using namespace std;
 using namespace cv;
 
-class disparity {
-public:
-	gpu::StereoBM_GPU bm;  // stereo matching object for disparity computation
-};
-
 // helper function for measuring time
 struct timespec check_timer(const char* str, struct timespec* ts){
 	struct timespec oldtime;
@@ -38,7 +33,7 @@ struct timespec check_timer(const char* str, struct timespec* ts){
 	}
 	return (struct timespec) {diffsec, diffnsec};
 }
- 
+
 int main(){
 	// declare timer
 	struct timespec ts_gpu;
