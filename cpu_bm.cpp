@@ -31,27 +31,32 @@ struct timespec check_timer(const char* str, struct timespec* ts){
 }
  
 int main(){
+	// declare a time struct
+	struct timespec ts;
 	// read images in, grayscale style
 	Mat im_l = imread("l.png",0);
 	Mat im_r = imread("r.png",0);
+	// disp image, and displayable disp image
 	Mat disp(im_l.rows,im_l.cols,CV_16S);
-	// this is more complicated than I think it ought to be
-    Ptr<StereoBM> bm = StereoBM::create(16,9);
+	Mat disp8(im_l.rows,im_l.cols,CV_8U);
 
-    // bm->setROI1(roi1);
-    // bm->setROI2(roi2);
-    bm->setPreFilterCap(31);
-    bm->setBlockSize(9);
-    bm->setMinDisparity(0);
-    bm->setNumDisparities(numberOfDisparities);
-    bm->setTextureThreshold(10);
-    bm->setUniquenessRatio(15);
-    bm->setSpeckleWindowSize(100);
-    bm->setSpeckleRange(32);
-    bm->setDisp12MaxDiff(1);
+	// some constants
+	int ndisp = 64;
+	int sad_size = 21;
+	// initialize the block matcher
+    StereoBM bm(0,ndisp,sad_size);
 
-    bm->compute(im_l,im_r,disp);
-    imshow("window",disp);
+	// start timer
+	check_timer(NULL, &ts);
+	// run the matcher
+	bm(im_l,im_r,disp);
+	// check timer
+	check_timer("Time for cpu_bm", &ts);
+
+	// convert image to be displayable
+	disp.convertTo(disp8, CV_8U, 255/(ndisp*16.));
+	//show image
+    imshow("window",disp8);
     waitKey(0);
 
 	return 0;
