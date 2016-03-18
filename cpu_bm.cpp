@@ -29,7 +29,7 @@ struct timespec check_timer(const char* str, struct timespec* ts){
 	}
 	return (struct timespec) {diffsec, diffnsec};
 }
- 
+
 int main(){
 	// declare a time struct
 	struct timespec ts;

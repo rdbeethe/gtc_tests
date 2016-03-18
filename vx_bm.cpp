@@ -53,38 +53,27 @@ int main(){
 	   simplicity of our graph, there are no intermediate images */
 	vx_image left = nvx::createImageFromMat(c, mat_l);
 	vx_image right = nvx::createImageFromMat(c, mat_r);
-	vx_image disp = vxCreateImage (c , w, h, VX_DF_IMAGE_S16);
+	vx_image disp = vxCreateImage (c , w, h, VX_DF_IMAGE_U8);
 	// this is an example of a virtual image, if you needed one
 	//vx_image intermed_im = vxCreateVirtualImage (g , 0, 0, VX_DF_IMAGE_VIRT);
 
-	// values taken from demo installed by libvisionworks
-	vx_int32 	minD = 0;
-	vx_int32 	maxD = 64;
-	vx_int32 	P1 = 8;
-	vx_int32 	P2 = 109;
-	vx_int32 	sad_size = 5;
-	vx_int32 	clip = 31;
-	vx_int32 	max_diff = 32000;
-	vx_int32 	uniqueness = 0;
+	vx_uint32 	sad_size = 21;
+	vx_uint32 	ndisp = 64;
 
 	// create the nodes in the graph
 	vx_node n [] = {
 		// there's only one node on this graph...
-		nvxSemiGlobalMatchingNode(g, left, right, disp, minD, maxD, 
-			P1, P2, sad_size, clip, max_diff, uniqueness, NVX_SCANLINE_ALL),
+		nvxStereoBlockMatchingNode(g, left, right, disp, sad_size, ndisp),
 	};
 
 	// verify then process the graph once
-	printf("verifying graph now...\n");
 	if(vxVerifyGraph(g) == VX_SUCCESS){
-		printf("graph verified, processing now...\n");
 		// start timer
 		check_timer(NULL, &ts);
 		// process graph
-		int test = vxProcessGraph(g);
+		vxProcessGraph(g);
 		// end timer
 		check_timer("vx_sgbm processing time", &ts);
-		printf("vxProcessGraph returns %d\n",test);
 	}else{
 		printf("graph verification failed, exiting...\n");
 		vxReleaseGraph(&g);

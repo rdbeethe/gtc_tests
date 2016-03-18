@@ -316,7 +316,7 @@ int asw(cv::Mat im_l, cv::Mat im_r, int ndisp, int s_sigma, int c_sigma){
     // make an image and view it:
     cv::Mat im_out(nrows,ncols,CV_8UC1,out);
     cv::Mat im_debug(nrows,ncols,CV_8UC3,debug);
-	cv::imshow("window",im_out);
+	cv::imshow("window",im_out*255/ndisp);
 	cv::waitKey(0);
 
 	// cleanup memory

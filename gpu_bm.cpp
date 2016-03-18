@@ -38,10 +38,13 @@ int main(){
 	// declare timer
 	struct timespec ts_gpu;
 	struct timespec ts_full;
-	// define the matcher
-	gpu::StereoBM_GPU bm;
-	bm.ndisp = 64;
-	bm.winSize = 21;
+
+	// some constants
+	int ndisp = 64;
+	int sad_size = 21;
+	// initialize the block matcher
+    gpu::StereoBM_GPU bm(0,ndisp,sad_size);
+
 	// read in the images, grayscale
 	Mat cones_l = imread("l.png",0);
 	Mat cones_r = imread("r.png",0);
@@ -74,7 +77,7 @@ int main(){
 
 
 	// show result
-	imshow("window",basic_disp);
+	imshow("window",basic_disp*255/ndisp);
 	waitKey(0);
 
 	return 0;
