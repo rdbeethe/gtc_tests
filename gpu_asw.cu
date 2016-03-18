@@ -81,7 +81,7 @@ __global__ void asw_kernel(unsigned char* global_left, unsigned char* global_rig
 	float min_cost;
 	unsigned char min_cost_index;
 	unsigned char ref_center_pix[3];
-	unsigned char tgt_center_pix[3];
+	// unsigned char tgt_center_pix[3];
 	unsigned char ref_pix[3];
 	unsigned char tgt_pix[3];
 
@@ -163,9 +163,10 @@ __global__ void asw_kernel(unsigned char* global_left, unsigned char* global_rig
 	// for each value of ndisp	
 	for(disp = 0; disp < ndisp; disp++){
 		// get a pointer to the tgt_center_pix, which is constant for each disp
-		tgt_center_pix[0] = tgt[(win_rad + ty)*tgt_width_bytes + (ndisp + win_rad + tx - disp)*NCHANS + 0];
-		tgt_center_pix[1] = tgt[(win_rad + ty)*tgt_width_bytes + (ndisp + win_rad + tx - disp)*NCHANS + 1];
-		tgt_center_pix[2] = tgt[(win_rad + ty)*tgt_width_bytes + (ndisp + win_rad + tx - disp)*NCHANS + 2];
+		// ... except I get better results by using ref_center_pix to compare to tgt_pix
+		// tgt_center_pix[0] = tgt[(win_rad + ty)*tgt_width_bytes + (ndisp + win_rad + tx - disp)*NCHANS + 0];
+		// tgt_center_pix[1] = tgt[(win_rad + ty)*tgt_width_bytes + (ndisp + win_rad + tx - disp)*NCHANS + 1];
+		// tgt_center_pix[2] = tgt[(win_rad + ty)*tgt_width_bytes + (ndisp + win_rad + tx - disp)*NCHANS + 2];
 		// reset weight and cost
 		weight = 0;
 		cost = 0;
@@ -229,8 +230,8 @@ __global__ void asw_kernel(unsigned char* global_left, unsigned char* global_rig
 
 int asw(cv::Mat im_l, cv::Mat im_r, int ndisp, int s_sigma, int c_sigma){
 	// window size and win_rad
-	int win_size = 3*s_sigma;
-	int win_rad = (win_size - 1)/2;
+	int win_rad = 1.5*s_sigma;
+	int win_size = 2*win_rad+1;
 	// declare timers
 	struct timespec ts_full;
 	struct timespec ts_gpu;

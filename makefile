@@ -2,10 +2,13 @@ CC=g++
 CFLAGS=`pkg-config opencv --cflags`
 LDFLAGS=`pkg-config opencv --libs`
 
-all: cpu_bm gpu_bm gpu_dbf gpu_asw
+all: cpu_bm gpu_bm gpu_dbf gpu_asw cpu_asw
+
+cpu_asw:cpu_asw.cpp
+	g++ $(CFLAGS) -o $@ $< $(LDFLAGS)
 
 gpu_asw:gpu_asw.cu
-	nvcc `pkg-config opencv --cflags` -o $@ $< `pkg-config opencv --libs`
+	nvcc $(CFLAGS) -o $@ $< $(LDFLAGS)
 
 gpu_dbf:gpu_dbf.cpp
 	g++ $(CFLAGS) -o $@ $< $(LDFLAGS)
@@ -20,4 +23,4 @@ run:
 	./cpu_bm
 
 clean:
-	rm *.o cpu_bm
+	rm *.o cpu_bm gpu_bm gpu_dbf gpu_asw
