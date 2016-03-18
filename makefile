@@ -26,4 +26,4 @@ run:
 	./cpu_bm
 
 clean:
-	rm *.o cpu_bm gpu_bm gpu_dbf gpu_asw
+	rm *.o cpu_bm gpu_bm gpu_dbf gpu_asw cpu_asw cv_sgbm
