@@ -2,7 +2,10 @@ CC=g++
 CFLAGS=`pkg-config opencv --cflags`
 LDFLAGS=`pkg-config opencv --libs`
 
-all: cpu_bm gpu_bm
+all: cpu_bm gpu_bm gpu_dbf
+
+gpu_dbf:gpu_dbf.cpp
+	g++ $(CFLAGS) -o $@ $< $(LDFLAGS)
 
 gpu_bm:gpu_bm.cpp
 	g++ $(CFLAGS) -o $@ $< $(LDFLAGS)

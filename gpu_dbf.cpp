@@ -47,14 +47,19 @@ int main(){
 	gpu::StereoBM_GPU bm;
 	bm.ndisp = 64;
 	bm.winSize = 21;
+	// define the disparity bilateral filter
+	gpu::DisparityBilateralFilter dbf; 
+	dbf = gpu::DisparityBilateralFilter(30, 3, 10);
 	// read in the images, grayscale
 	Mat cones_l = imread("l.png",0);
 	Mat cones_r = imread("r.png",0);
 	// declare raw images
 	gpu::GpuMat d_cones_l(SIZE,CV_8U), d_cones_r(SIZE,CV_8U);
-	// declare disparity images
-	Mat basic_disp(SIZE,CV_8U);
+	// declare disparity image
 	gpu::GpuMat d_basic_disp(SIZE,CV_8U);
+	// declare filtered disparity images
+	gpu::GpuMat d_post_dbf(SIZE,CV_8U);
+	Mat post_dbf(SIZE,CV_8U);
 
 	// start the time that includes upload times
 	check_timer(NULL, &ts_full);
@@ -67,19 +72,21 @@ int main(){
 	check_timer(NULL, &ts_gpu);
 	// do the basic match
 	bm(d_cones_l,d_cones_r,d_basic_disp);
+	// do the disparity bilateral filter
+	dbf(d_basic_disp,d_cones_l,d_post_dbf);
 
 	// check gpu processing time
-	check_timer("gpu_bm: gpu-only time", &ts_gpu);
+	check_timer("dbf: gpu-only time", &ts_gpu);
 
 	// download results
-	d_basic_disp.download(basic_disp);
+	d_post_dbf.download(post_dbf);
 	
 	// check timer that includes download times
-	check_timer("gpu_bm: upload-process-download time", &ts_full);
+	check_timer("dbf: upload-process-download time", &ts_full);
 
 
 	// show result
-	imshow("window",basic_disp);
+	imshow("window",post_dbf);
 	waitKey(0);
 
 	return 0;
