@@ -5,15 +5,9 @@
 #include <time.h>
 
 #define SIZE cones_l.rows,cones_l.cols
-#define OUTPUT_SCALE 4
 
 using namespace std;
 using namespace cv;
-
-class disparity {
-public:
-	gpu::StereoBM_GPU bm;  // stereo matching object for disparity computation
-};
 
 // helper function for measuring time
 struct timespec check_timer(const char* str, struct timespec* ts){
@@ -34,7 +28,7 @@ struct timespec check_timer(const char* str, struct timespec* ts){
 			diffsec--;
 			diffnsec += 1000000000;
 		}
-		printf("%s:%ds %dns\n",str,diffsec,diffnsec);
+		printf("%s:%ds %fms\n",str,diffsec,diffnsec/1e6);
 	}
 	return (struct timespec) {diffsec, diffnsec};
 }
@@ -86,8 +80,9 @@ int main(){
 
 
 	// show result
-	imshow("window",post_dbf);
-	waitKey(0);
+	imwrite("out/gpu_dbf.png",post_dbf);
+	//imshow("window",post_dbf);
+	//waitKey(0);
 
 	return 0;
 }

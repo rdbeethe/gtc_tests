@@ -29,7 +29,9 @@ cpu_bm:cpu_bm.cpp
 	g++ $(CFLAGS) -o $@ $< $(LDFLAGS)
 
 run:
-	./cpu_bm
+	./cpu_bm && ./gpu_bm && ./gpu_dbf && ./cv_sgbm && ./vx_bm && ./vx_sgbm && ./gpu_asw
 
 clean:
-	rm *.o cpu_bm gpu_bm gpu_dbf gpu_asw cpu_asw cv_sgbm
+	@touch cpu_bm gpu_bm gpu_dbf gpu_asw cpu_asw cv_sgbm vx_sgbm vx_bm out/.keep
+	rm -r cpu_bm gpu_bm gpu_dbf gpu_asw cpu_asw cv_sgbm vx_sgbm vx_bm out/*
+

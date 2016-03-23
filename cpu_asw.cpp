@@ -27,7 +27,7 @@ struct timespec check_timer(const char* str, struct timespec* ts){
 			diffsec--;
 			diffnsec += 1000000000;
 		}
-		printf("%s:%ds %dns\n",str,diffsec,diffnsec);
+		printf("%s:%ds %fms\n",str,diffsec,diffnsec/1e6);
 	}
 	return (struct timespec) {diffsec, diffnsec};
 }
@@ -163,8 +163,9 @@ int asw(Mat im_l, Mat im_r, int ndisp, int s_sigma, int i_sigma){
 
 	//show the output matrix
 	Mat outmat(nrows,ncols,CV_8UC1,out);
-	imshow("window",outmat);
-	waitKey(0);
+	imwrite("out/cpu_asw.png",outmat);
+	// imshow("window",outmat);
+	// waitKey(0);
 
 	free(out);
 

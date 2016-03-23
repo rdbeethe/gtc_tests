@@ -33,7 +33,7 @@ struct timespec check_timer(const char* str, struct timespec* ts){
 			diffsec--;
 			diffnsec += 1000000000;
 		}
-		printf("%s:%ds %dns\n",str,diffsec,diffnsec);
+		printf("%s:%ds %fms\n",str,diffsec,diffnsec/1e6);
 	}
 	return (struct timespec) {diffsec, diffnsec};
 }
@@ -316,8 +316,9 @@ int asw(cv::Mat im_l, cv::Mat im_r, int ndisp, int s_sigma, int c_sigma){
     // make an image and view it:
     cv::Mat im_out(nrows,ncols,CV_8UC1,out);
     cv::Mat im_debug(nrows,ncols,CV_8UC3,debug);
-	cv::imshow("window",im_out*255/ndisp);
-	cv::waitKey(0);
+	cv::imwrite("out/gpu_asw.png",im_out*255/ndisp);
+	//cv::imshow("window",im_out*255/ndisp);
+	//cv::waitKey(0);
 
 	// cleanup memory
 	cudaFree(d_im_l);

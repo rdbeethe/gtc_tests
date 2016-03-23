@@ -25,7 +25,7 @@ struct timespec check_timer(const char* str, struct timespec* ts){
 			diffsec--;
 			diffnsec += 1000000000;
 		}
-		printf("%s:%ds %dns\n",str,diffsec,diffnsec);
+		printf("%s:%ds %fms\n",str,diffsec,diffnsec/1e6);
 	}
 	return (struct timespec) {diffsec, diffnsec};
 }
@@ -56,8 +56,9 @@ int main(){
 	// convert image to be displayable
 	disp.convertTo(disp8, CV_8U, 255/(ndisp*16.));
 	//show image
-    imshow("window",disp8);
-    waitKey(0);
+	imwrite("out/cpu_bm.png",disp8);
+    //imshow("window",disp8);
+    //waitKey(0);
 
 	return 0;
 }

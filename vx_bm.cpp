@@ -23,7 +23,7 @@ struct timespec check_timer(const char* str, struct timespec* ts){
 			diffsec--;
 			diffnsec += 1000000000;
 		}
-		printf("%s:%ds %dns\n",str,diffsec,diffnsec);
+		printf("%s:%ds %fms\n",str,diffsec,diffnsec/1e6);
 	}
 	return (struct timespec) {diffsec, diffnsec};
 }
@@ -73,7 +73,7 @@ int main(){
 		// process graph
 		vxProcessGraph(g);
 		// end timer
-		check_timer("vx_sgbm processing time", &ts);
+		check_timer("vx_bm processing time", &ts);
 	}else{
 		printf("graph verification failed, exiting...\n");
 		vxReleaseGraph(&g);
@@ -101,8 +101,9 @@ int main(){
 	cv::Mat mat_im;
 	mat_d.convertTo(mat_im, CV_8U, 255./(maxval-minval), -minval);
 	// show image
-	cv::imshow("window",mat_im);
-	cv::waitKey(0);
+	cv::imwrite("out/vx_bm.png",mat_im);
+	//cv::imshow("window",mat_im);
+	//cv::waitKey(0);
 
 	// I'm not completely sure that I'm releasing everything correctly
 	vxReleaseGraph(&g);

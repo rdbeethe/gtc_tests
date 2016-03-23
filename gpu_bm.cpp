@@ -29,7 +29,7 @@ struct timespec check_timer(const char* str, struct timespec* ts){
 			diffsec--;
 			diffnsec += 1000000000;
 		}
-		printf("%s:%ds %dns\n",str,diffsec,diffnsec);
+		printf("%s:%ds %fms\n",str,diffsec,diffnsec/1e6);
 	}
 	return (struct timespec) {diffsec, diffnsec};
 }
@@ -77,8 +77,9 @@ int main(){
 
 
 	// show result
-	imshow("window",basic_disp*255/ndisp);
-	waitKey(0);
+	imwrite("out/gpu_bm.png",basic_disp*255/ndisp);
+	//imshow("window",basic_disp*255/ndisp);
+	//waitKey(0);
 
 	return 0;
 }
