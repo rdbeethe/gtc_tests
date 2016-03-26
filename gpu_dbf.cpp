@@ -35,15 +35,14 @@ struct timespec check_timer(const char* str, struct timespec* ts){
  
 int main(){
 	// declare timer
-	struct timespec ts_gpu;
-	struct timespec ts_full;
+	struct timespec ts;
 	// define the matcher
-	gpu::StereoBM_GPU bm;
-	bm.ndisp = 64;
-	bm.winSize = 21;
+	int ndisp = 64;
+	int winSize = 21;
+	gpu::StereoBM_GPU bm(0,ndisp,winSize);
 	// define the disparity bilateral filter
 	gpu::DisparityBilateralFilter dbf; 
-	dbf = gpu::DisparityBilateralFilter(30, 3, 10);
+	dbf = gpu::DisparityBilateralFilter(30, 7, 3);
 	// read in the images, grayscale
 	Mat cones_l = imread("l.png",0);
 	Mat cones_r = imread("r.png",0);
@@ -55,32 +54,27 @@ int main(){
 	gpu::GpuMat d_post_dbf(SIZE,CV_8U);
 	Mat post_dbf(SIZE,CV_8U);
 
-	// start the time that includes upload times
-	check_timer(NULL, &ts_full);
-
 	// push the images to the GPU
 	d_cones_l.upload(cones_l);
 	d_cones_r.upload(cones_r);
 
-	// start the timer that is only gpu processing time
-	check_timer(NULL, &ts_gpu);
 	// do the basic match
 	bm(d_cones_l,d_cones_r,d_basic_disp);
+
+	// start the timer for just the dbf time
+	check_timer(NULL, &ts);
+
 	// do the disparity bilateral filter
 	dbf(d_basic_disp,d_cones_l,d_post_dbf);
 
 	// check gpu processing time
-	check_timer("dbf: gpu-only time", &ts_gpu);
+	check_timer("gpu_dbf time", &ts);
 
 	// download results
 	d_post_dbf.download(post_dbf);
-	
-	// check timer that includes download times
-	check_timer("dbf: upload-process-download time", &ts_full);
-
 
 	// show result
-	imwrite("out/gpu_dbf.png",post_dbf);
+	imwrite("out/gpu_dbf.png",post_dbf*255/ndisp);
 	//imshow("window",post_dbf);
 	//waitKey(0);
 
