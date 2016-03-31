@@ -63,7 +63,7 @@ int main(){
 	// run the matcher
 	sgbm(im_l,im_r,disp);
 	// check timer
-	check_timer("Time for cv_sgbm (cpu)", &ts);
+	check_timer("cv_sgbm", &ts);
 
 	// convert image to be displayable
 	disp.convertTo(disp8, CV_8U, 255/(ndisp*16.));

@@ -36,8 +36,7 @@ struct timespec check_timer(const char* str, struct timespec* ts){
 
 int main(){
 	// declare timer
-	struct timespec ts_gpu;
-	struct timespec ts_full;
+	struct timespec ts;
 
 	// some constants
 	int ndisp = 64;
@@ -54,28 +53,22 @@ int main(){
 	Mat basic_disp(SIZE,CV_8U);
 	gpu::GpuMat d_basic_disp(SIZE,CV_8U);
 
-	// start the time that includes upload times
-	check_timer(NULL, &ts_full);
-
 	// push the images to the GPU
 	d_cones_l.upload(cones_l);
 	d_cones_r.upload(cones_r);
 
-	// start the timer that is only gpu processing time
-	check_timer(NULL, &ts_gpu);
+	// start the timer
+	check_timer(NULL, &ts);
+
 	// do the basic match
 	bm(d_cones_l,d_cones_r,d_basic_disp);
 
-	// check gpu processing time
-	check_timer("gpu_bm: gpu-only time", &ts_gpu);
+	// check processing time
+	check_timer("gpu_bm", &ts);
 
 	// download results
 	d_basic_disp.download(basic_disp);
 	
-	// check timer that includes download times
-	check_timer("gpu_bm: upload-process-download time", &ts_full);
-
-
 	// show result
 	imwrite("out/gpu_bm.png",basic_disp*255/ndisp);
 	//imshow("window",basic_disp*255/ndisp);

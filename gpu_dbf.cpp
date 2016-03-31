@@ -68,7 +68,7 @@ int main(){
 	dbf(d_basic_disp,d_cones_l,d_post_dbf);
 
 	// check gpu processing time
-	check_timer("gpu_dbf time", &ts);
+	check_timer("gpu_dbf", &ts);
 
 	// download results
 	d_post_dbf.download(post_dbf);

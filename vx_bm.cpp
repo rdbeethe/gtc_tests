@@ -73,7 +73,7 @@ int main(){
 		// process graph
 		vxProcessGraph(g);
 		// end timer
-		check_timer("vx_bm processing time", &ts);
+		check_timer("vx_bm", &ts);
 	}else{
 		printf("graph verification failed, exiting...\n");
 		vxReleaseGraph(&g);

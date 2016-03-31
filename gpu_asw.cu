@@ -232,9 +232,8 @@ int asw(cv::Mat im_l, cv::Mat im_r, int ndisp, int s_sigma, int c_sigma){
 	// window size and win_rad
 	int win_rad = 1.5*s_sigma;
 	int win_size = 2*win_rad+1;
-	// declare timers
-	struct timespec ts_full;
-	struct timespec ts_gpu;
+	// declare timer
+	struct timespec ts;
 
 	// check that images are matching dimensions
 	if(im_l.rows != im_r.rows){
@@ -289,14 +288,12 @@ int asw(cv::Mat im_l, cv::Mat im_r, int ndisp, int s_sigma, int c_sigma){
 		return 1;
 	}
 	
-	// start the timer which includes upload time
-	check_timer(NULL, &ts_full);
 	//copy the host input data to the device
     cudaMemcpy(d_im_l, data_l, nchans*nrows*ncols*sizeof(unsigned char), cudaMemcpyHostToDevice);
     cudaMemcpy(d_im_r, data_r, nchans*nrows*ncols*sizeof(unsigned char), cudaMemcpyHostToDevice);
 
-	// start the timer which does not include upload time
-	check_timer(NULL, &ts_gpu);
+	// start the timer	
+	check_timer(NULL, &ts);
 	// call the asw_kernel
 	dim3 blocksPerGrid(22,21);
 	dim3 threadsPerBlock(BLOCK_SIZE,BLOCK_SIZE);
@@ -305,13 +302,12 @@ int asw(cv::Mat im_l, cv::Mat im_r, int ndisp, int s_sigma, int c_sigma){
     asw_kernel<<<blocksPerGrid, threadsPerBlock, shared_size>>>(d_im_l, d_im_r, d_out, d_debug,
     	nrows, ncols, nchans, ndisp, win_size, win_rad, s_sigma, c_sigma);
     cudaDeviceSynchronize();
-    check_timer("gpu_asw: gpu-only time", &ts_gpu);
+    check_timer("gpu_asw", &ts);
 	// gpu_perror("asw_kernel");
 
 	// copy the device output data to the host
     cudaMemcpy(out, d_out, nrows*ncols*sizeof(unsigned char), cudaMemcpyDeviceToHost);
     cudaMemcpy(debug, d_debug, nrows*ncols*nchans*sizeof(unsigned char), cudaMemcpyDeviceToHost);
-    check_timer("gpu_asw: upload-compute-download time", &ts_full);
 
     // make an image and view it:
     cv::Mat im_out(nrows,ncols,CV_8UC1,out);

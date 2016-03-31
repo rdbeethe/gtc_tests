@@ -47,7 +47,7 @@ int argmin_float(float* data, int len){
 int asw(Mat im_l, Mat im_r, int ndisp, int s_sigma, int i_sigma){
 	// window size and win_rad
 	int win_rad = 1.5*s_sigma;
-	int win_size = 2*s_sigma+1;
+	int win_size = 2*win_rad+1;
 
 	// check that images are matching dimensions
 	if(im_l.rows != im_r.rows){
@@ -159,11 +159,11 @@ int asw(Mat im_l, Mat im_r, int ndisp, int s_sigma, int i_sigma){
 	}
 
 	// end timer
-	check_timer("cpu_asw calculation time", &ts);
+	check_timer("cpu_asw", &ts);
 
 	//show the output matrix
 	Mat outmat(nrows,ncols,CV_8UC1,out);
-	imwrite("out/cpu_asw.png",outmat);
+	imwrite("out/cpu_asw.png",255*outmat/ndisp);
 	// imshow("window",outmat);
 	// waitKey(0);
 
@@ -174,8 +174,8 @@ int asw(Mat im_l, Mat im_r, int ndisp, int s_sigma, int i_sigma){
 
 int main(int argc, char** argv){
 	// spacial and intensity sigmas
-	int s_sigma = 4;
-	int i_sigma = 30;
+	int s_sigma = 5;
+	int i_sigma = 50;
 	// number of disparities to check
 	int ndisp = 64;
 	// input images

@@ -51,7 +51,7 @@ int main(){
 	// run the matcher
 	bm(im_l,im_r,disp);
 	// check timer
-	check_timer("Time for cpu_bm", &ts);
+	check_timer("cpu_bm", &ts);
 
 	// convert image to be displayable
 	disp.convertTo(disp8, CV_8U, 255/(ndisp*16.));

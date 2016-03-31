@@ -1,4 +1,3 @@
-CC=g++
 CFLAGS=`pkg-config opencv visionworks --cflags`
 LDFLAGS=`pkg-config opencv visionworks --libs`
 
