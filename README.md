@@ -12,13 +12,15 @@ The version of my own GPU-accelerated adaptive support weight stereo matching al
 
 If you have OpenCV 2.4.x and Nvidia VisionWorks and CUDA installed on your computer, you can just run
 
-```make```
+```make
+```
 
 and
 
-```make run```
+```make run
+```
 
-Note that the cpu_asw algorithm is very slow and is not tested by default.  You will have to execute it manually.
+Note that the cpu\_asw algorithm is very slow and is not tested by default.  You will have to execute it manually.
 
 If you do not have Nvidia VisionWorks installed, you will have to adapt the makefile by removing the "visionworks" flag from the `pkg-config` commands, and modify the `all` rule to not depend on `vx_sgbm` and `vx_bm`.  Because the code was meant to be tested on Linux4Tegra (such as on the Jetson TK1 and TX1), it does not support OpenCV 3.0.x.
 
@@ -26,5 +28,5 @@ If you do not have Nvidia VisionWorks installed, you will have to adapt the make
 
 If during your build you have CUDA installed but get errors such as "nvcc: command not found", you may have to modify your PATH environment variable to include "/usr/local/cuda<your cuda version>/bin".
 
-If at run time you get an error sort of like "unable to find lib<cuda-something>.so", you may have to modify your LD_LIBRARY_PATH environment variableto include "/usr/local/cuda/lib" or "/usr/local/cuda/lib64", as appropriate.
+If at run time you get an error sort of like "unable to find lib<cuda-something>.so", you may have to modify your LD\_LIBRARY\_PATH environment variableto include "/usr/local/cuda/lib" or "/usr/local/cuda/lib64", as appropriate.
 
