@@ -12,12 +12,14 @@ The version of my own GPU-accelerated adaptive support weight stereo matching al
 
 If you have OpenCV 2.4.x and Nvidia VisionWorks and CUDA installed on your computer, you can just run
 
-```make
+```
+make
 ```
 
 and
 
-```make run
+```
+make run
 ```
 
 Note that the cpu\_asw algorithm is very slow and is not tested by default.  You will have to execute it manually.
